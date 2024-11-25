@@ -58,6 +58,21 @@ public class RoleController {
                 });
     }
 
+    // Оновлення ролі
+    @PutMapping("/{roleId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Role> updateRole(@PathVariable Long roleId, @RequestBody @Valid Role roleDetails) {
+        return roleService.updateRole(roleId, roleDetails)
+                .map(updatedRole -> {
+                    logger.info("Role updated with id: {}", roleId);
+                    return ResponseEntity.ok(updatedRole);
+                })
+                .orElseGet(() -> {
+                    logger.warn("Role not found with id: {}", roleId);
+                    return ResponseEntity.notFound().build();
+                });
+    }
+
     // Видалення ролі
     @DeleteMapping("/{roleId}")
     @PreAuthorize("hasRole('ADMIN')")
