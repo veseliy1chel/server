@@ -3,7 +3,6 @@ package com.project.server.entity;
 
 import jakarta.persistence.*;
 
-
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
