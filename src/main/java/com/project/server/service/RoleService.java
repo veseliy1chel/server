@@ -1,10 +1,9 @@
 package com.project.server.service;
 
 import com.project.server.entity.Role;
+import com.project.server.repository.RoleRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.project.server.repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -56,5 +55,16 @@ public class RoleService {
     // Метод для перевірки існування ролі за ім'ям
     public boolean existsByName(String roleName) {
         return roleRepository.existsByName(roleName);
+    }
+
+    // Метод для оновлення ролі
+    public Optional<Role> updateRole(Long roleId, Role roleDetails) {
+        return roleRepository.findById(roleId).map(role -> {
+            role.setName(roleDetails.getName());
+            return roleRepository.save(role);
+        });
+    }
+    public void deleteAllRoles() {
+        roleRepository.deleteAll();
     }
 }

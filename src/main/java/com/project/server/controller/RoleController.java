@@ -12,7 +12,10 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/roles")
@@ -30,10 +33,28 @@ public class RoleController {
 
     // Створення нової ролі
     @PostMapping
-    public ResponseEntity<Role> createRole(@RequestBody @Valid Role role) {
-        Role createdRole = roleService.createRole(role);
-        logger.info("Role created with name: {}", role.getName());
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdRole);
+    public ResponseEntity<Map<String, String>> createRole(@RequestBody Role role) {
+        if (role.getName() == null || role.getName().isEmpty()) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(Collections.singletonMap("error", "Role name is required."));
+        }
+
+        if (roleService.existsByName(role.getName())) {
+            return ResponseEntity
+                    .status(HttpStatus.CONFLICT)
+                    .body(Collections.singletonMap("error", "Role with name " + role.getName() + " already exists."));
+        }
+
+        roleService.createRole(role);
+
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Role created successfully");
+        response.put("name", role.getName());
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(response);
     }
 
     // Отримання всіх ролей

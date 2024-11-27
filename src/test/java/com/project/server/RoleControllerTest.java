@@ -13,6 +13,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
+
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -22,6 +25,16 @@ public class RoleControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @BeforeEach
+    public void setUp() {
+        roleService.deleteAllRoles();
+    }
+
+    @AfterEach
+    public void tearDown() {
+        roleService.deleteAllRoles();
+    }
 
     private static final String ROLE_ADMIN = "ADMIN";
 private static final String ROLE_ERROR = "Role name is required.";
@@ -80,5 +93,14 @@ private static final String ROLE_USER = "USER";
                         .content(roleJson))
                 .andExpect(status().isConflict())
                 .andExpect(jsonPath("$.error").value("Role with name " + ROLE_ADMIN + " already exists."));
+    }
+    @Test
+    public void testGetRoleByName() throws Exception {
+        createRoleIfNotExists(ROLE_ADMIN);
+
+        mockMvc.perform(get("/api/roles/" + ROLE_ADMIN)
+                        .with(user("admin").roles("ADMIN")))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value(ROLE_ADMIN));
     }
 }

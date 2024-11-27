@@ -64,4 +64,7 @@ public class UserService implements UserDetailsService {
             throw new RuntimeException("Користувача або ролі не знайдено");
         }
     }
+    public boolean userExistsByUsername(String username) {
+        return userRepository.findByUsername(username).isPresent();
+    }
 }

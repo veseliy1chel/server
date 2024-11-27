@@ -28,15 +28,14 @@ public class AuthController {
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
-    @PostMapping("/register")
-    public ResponseEntity<String> registerUser(@RequestBody AppUser user) {
-        try {
-            userService.saveUser(user);
-            return ResponseEntity.status(HttpStatus.CREATED).body("User registered successfully");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error: " + e.getMessage());
-        }
+@PostMapping("/register")
+public ResponseEntity<String> registerUser(@RequestBody AppUser user) {
+    if (userService.userExistsByUsername(user.getUsername())) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User already exists");
     }
+    userService.saveUser(user);
+    return ResponseEntity.status(HttpStatus.OK).body("User registered successfully");
+}
 
     @PostMapping("/login")
     public ResponseEntity<String> loginUser(@RequestBody AppUser user) {
