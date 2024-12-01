@@ -2,11 +2,15 @@ package com.project.server.entity;
 
 import jakarta.persistence.*;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "app_user") // Уникнення конфлікту із зарезервованим словом
 public class AppUser {
+    public AppUser() {
+        this.roles = new HashSet<>();
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,7 +27,7 @@ public class AppUser {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
-    private Set<Role> roles;
+private Set<Role> roles = new HashSet<>();
 
     // Getters and Setters
     public Long getId() {

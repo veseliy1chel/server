@@ -21,6 +21,8 @@ public class SensorDataController {
     @PostMapping
     public ResponseEntity<SensorData> saveData(@RequestBody SensorData data) {
         SensorData savedData = service.saveData(data);
+        System.out.println("Data to be saved: " + data);
+        System.out.println("Saved data: " + savedData);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedData);
     }
 

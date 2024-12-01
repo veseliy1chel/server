@@ -40,7 +40,10 @@ public class SensorDataService {
     }
 
     public SensorData saveData(SensorData data) {
-        return repository.save(data);
+        // припустимо що репозиторій правильно зберігає дані
+        SensorData savedData = repository.save(data);
+        System.out.println("Data in repository: " + savedData);
+        return savedData;
     }
 
     public List<SensorData> getDataByRoom(String room) {
